@@ -66,8 +66,12 @@ public:
 
   ///* Sigma point spreading parameter
   double lambda_;
+  
+  //previous timestamp, to get time delta
+  long long previous_timestamp_;
 
-
+  //nis value
+  double nis_;
   /**
    * Constructor
    */
@@ -77,6 +81,18 @@ public:
    * Destructor
    */
   virtual ~UKF();
+  
+  //generate augmented sigma points
+  void AugmentedSigmaPoints(MatrixXd* Xsig_out);
+  //predict sigma points
+  void SigmaPointPrediction(MatrixXd* Xsig_out, MatrixXd Xsig_aug, double delta_t);
+  //predict mean and covariance
+  void PredictMeanAndCovariance();
+  
+  //predict measurement
+  void PredictMeasurement(VectorXd &z_pred, MatrixXd &S, MatrixXd Zsig, MatrixXd R, int n_z);
+  //update state
+  void UpdateState(MatrixXd S, MatrixXd Zsig, VectorXd z_pred, VectorXd z, int n_z, bool is_radar);
 
   /**
    * ProcessMeasurement
@@ -103,5 +119,10 @@ public:
    */
   void UpdateRadar(MeasurementPackage meas_package);
 };
+
+//normalise the angle for radar
+double normAngle(double theta);
+//convert radar values to cartesian
+Eigen::VectorXd polar2Cartesian(Eigen::VectorXd polar);
 
 #endif /* UKF_H */
