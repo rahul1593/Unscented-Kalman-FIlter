@@ -24,7 +24,7 @@ UKF::UKF() {
   P_ = MatrixXd::Identity(5, 5);
 
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 0.625;
+  std_a_ = 0.512;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   std_yawdd_ = 0.743;
@@ -312,6 +312,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   // print the output
   cout << "x_ = " << x_ << endl;
   cout << "P_ = " << P_ << endl;
+  cout << "NIS= " << nis_ << endl;
 }
 
 /**
