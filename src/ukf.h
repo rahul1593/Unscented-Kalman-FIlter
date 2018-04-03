@@ -14,7 +14,7 @@ class UKF {
 public:
 
   ///* initially set to false, set to true in first call of ProcessMeasurement
-  bool is_initialized_;
+  bool is_initialized_, fm_;
 
   ///* if this is false, laser measurements will be ignored (except for init)
   bool use_laser_;
@@ -81,18 +81,6 @@ public:
    * Destructor
    */
   virtual ~UKF();
-  
-  //generate augmented sigma points
-  void AugmentedSigmaPoints(MatrixXd* Xsig_out);
-  //predict sigma points
-  void SigmaPointPrediction(MatrixXd* Xsig_out, MatrixXd Xsig_aug, double delta_t);
-  //predict mean and covariance
-  void PredictMeanAndCovariance();
-  
-  //predict measurement
-  void PredictMeasurement(VectorXd &z_pred, MatrixXd &S, MatrixXd Zsig, MatrixXd R, int n_z);
-  //update state
-  void UpdateState(MatrixXd S, MatrixXd Zsig, VectorXd z_pred, VectorXd z, int n_z, bool is_radar);
 
   /**
    * ProcessMeasurement
@@ -118,10 +106,26 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+  
+private:
+    
+  
+  //generate augmented sigma points
+  void AugmentedSigmaPoints(MatrixXd* Xsig_out);
+  //predict sigma points
+  void SigmaPointPrediction(MatrixXd Xsig_aug, double delta_t);
+  //predict mean and covariance
+  void PredictMeanAndCovariance();
+  
+  //predict measurement
+  void PredictMeasurement(VectorXd &z_pred, MatrixXd &S, MatrixXd Zsig, MatrixXd R, int n_z);
+  //update state
+  void UpdateState(MatrixXd S, MatrixXd Zsig, VectorXd z_pred, VectorXd z, int n_z, bool is_radar);
+  
+  //normalise the angle for radar
+  double normAngle(const double theta);
 };
 
-//normalise the angle for radar
-double normAngle(double theta);
 //convert radar values to cartesian
 Eigen::VectorXd polar2Cartesian(Eigen::VectorXd polar);
 
