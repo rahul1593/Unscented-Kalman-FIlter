@@ -49,6 +49,9 @@ UKF::UKF() {
   /**
   Complete the initialization. See ukf.h for other member properties.
   */
+  previous_timestamp_ = 0;
+  is_initialized_ = false;
+  
   n_x_ = 5;
   n_aug_ = 7;
   lambda_ = 3 - n_aug_;
